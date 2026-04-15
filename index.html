@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stow Barn Remodel — Timber Tek LLC</title>
+  <meta name="description" content="Project plan and schedule for the Stow Barn Remodel, a structural restoration and remodel managed by Timber Tek LLC." />
+  <meta name="theme-color" content="#2b2018" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#overview">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="https://www.timbertekllc.com" target="_blank" rel="noopener" aria-label="Timber Tek LLC">
+        <img class="brand-logo" src="assets/timbertek-logo.png" alt="Timber Tek LLC — Above And Beyond Service And Quality" width="323" height="130" />
+      </a>
+
+      <nav class="header-actions" aria-label="Primary contact">
+        <a class="btn btn-ghost" href="mailto:scott@timbertekllc.com">Email Scott</a>
+        <a class="btn btn-ghost" href="mailto:craig@timbertekllc.com">Email Craig</a>
+        <button class="btn btn-primary" type="button" id="printBtn">Print Schedule</button>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-eyebrow">Project Plan</div>
+      <h1 class="hero-title">Stow Barn Remodel</h1>
+      <p class="hero-lede">
+        A structural restoration and remodel of a historic New England barn — managed end-to-end by Timber Tek LLC.
+        This page shares the baseline project schedule and scope so everyone stays aligned as the work progresses.
+      </p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <span class="meta-label">Duration</span>
+          <span class="meta-value">~10 weeks + pre-start</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Project Lead</span>
+          <span class="meta-value">Timber Tek LLC</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Status</span>
+          <span class="meta-value">Pre-permit / planning</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container main-content">
+
+    <section id="overview" class="section">
+      <header class="section-head">
+        <h2 class="section-title">Project Overview</h2>
+        <p class="section-kicker">What's included in the scope of work</p>
+      </header>
+      <div class="overview-grid" id="overviewGrid" role="list"></div>
+    </section>
+
+    <section id="schedule" class="section">
+      <header class="section-head">
+        <h2 class="section-title">Baseline Schedule</h2>
+        <p class="section-kicker">Week-by-week sequencing — click any phase to expand</p>
+      </header>
+
+      <div class="schedule-toolbar" role="toolbar" aria-label="Schedule filters">
+        <div class="filter-group" id="filterGroup" role="group" aria-label="Filter by category">
+          <button class="chip chip-active" type="button" data-filter="all">All phases</button>
+        </div>
+        <div class="toolbar-actions">
+          <button class="link-btn" type="button" id="expandAllBtn">Expand all</button>
+          <span class="toolbar-sep" aria-hidden="true">&middot;</span>
+          <button class="link-btn" type="button" id="collapseAllBtn">Collapse all</button>
+        </div>
+      </div>
+
+      <ol class="timeline" id="timeline"></ol>
+    </section>
+
+    <section id="scope" class="section">
+      <header class="section-head">
+        <h2 class="section-title">Scope Categories</h2>
+        <p class="section-kicker">Major work areas grouped for reference</p>
+      </header>
+      <div class="scope-grid" id="scopeGrid"></div>
+    </section>
+
+    <section id="notes" class="section">
+      <header class="section-head">
+        <h2 class="section-title">Notes &amp; Assumptions</h2>
+      </header>
+      <blockquote class="callout">
+        This schedule is a baseline planning tool. Sequencing may shift based on permit timing, site
+        conditions, weather, inspections, subcontractor coordination, and material lead times. The plan
+        will be updated as work progresses and field conditions are uncovered.
+      </blockquote>
+
+      <div class="notes-grid">
+        <article class="note-card">
+          <h3>Project Responsibility</h3>
+          <p>
+            <strong>Timber Tek LLC</strong> is managing the full project and remains the single point of
+            coordination. Specialized subcontractors may be used for scopes such as roofing, concrete,
+            garage doors, and electrical — all under Timber Tek's direction.
+          </p>
+        </article>
+        <article class="note-card">
+          <h3>Structural Work</h3>
+          <p>
+            The project includes substantial structural work: new footings, slab-on-grade pours, lally
+            columns and support framing, LVL and engineered framing components, roof sheathing
+            replacement, and targeted repairs to the historic timber frame.
+          </p>
+        </article>
+        <article class="note-card">
+          <h3>Preservation</h3>
+          <p>
+            Bora-Care treatment is applied after structural repairs and again at project completion to
+            protect the restored timber frame long-term.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img class="footer-logo" src="assets/timbertek-logo.png" alt="Timber Tek LLC" />
+        <div class="footer-tag">General contracting &middot; Timber framing &middot; Remodels</div>
+      </div>
+      <div class="footer-links">
+        <a href="https://www.timbertekllc.com" target="_blank" rel="noopener">www.timbertekllc.com</a>
+        <a href="mailto:build@timbertekllc.com">build@timbertekllc.com</a>
+        <a href="mailto:scott@timbertekllc.com">scott@timbertekllc.com</a>
+        <a href="mailto:craig@timbertekllc.com">craig@timbertekllc.com</a>
+      </div>
+      <div class="footer-fine">
+        <div>&copy; <span id="year"></span> Timber Tek LLC. All rights reserved.</div>
+        <div class="footer-note">Hosted on GitHub Pages &middot; Schedule is a planning baseline and may be updated</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

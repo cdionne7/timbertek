@@ -1,5 +1,38 @@
 /* Yearly planner — additive styles on top of styles.css */
 
+/* Christal. Calendar wordmark */
+.brand-christal {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  text-decoration: none;
+  line-height: 1;
+}
+.brand-christal:hover { text-decoration: none; }
+.christal-mark {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 34px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  background: linear-gradient(90deg, var(--ttek-orange-dark) 0%, var(--wood-dark) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.christal-sub {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+@media (max-width: 640px) {
+  .christal-mark { font-size: 28px; }
+  .christal-sub  { font-size: 11px; letter-spacing: 0.18em; }
+}
+
 .hero-compact { padding: 40px 0 28px; }
 
 /* Toolbar */

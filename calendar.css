@@ -12,37 +12,42 @@
   --tiger-gold: #f6c560;
 }
 
-/* Christal. Calendar wordmark */
-.brand-christal {
+/* Littleton Tigers header wordmark */
+.brand-tigers {
   display: inline-flex;
-  align-items: baseline;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
   text-decoration: none;
   line-height: 1;
 }
-.brand-christal:hover { text-decoration: none; }
-.christal-mark {
+.brand-tigers:hover { text-decoration: none; }
+.brand-paw {
+  width: 48px; height: 48px;
+  fill: var(--tiger-orange-deep);
+  flex: 0 0 auto;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,0.1));
+}
+.brand-stack { display: flex; flex-direction: column; gap: 2px; }
+.brand-school {
   font-family: var(--font-serif);
   font-weight: 700;
-  font-size: 34px;
-  letter-spacing: -0.02em;
+  font-size: 26px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   color: var(--tiger-black);
-  background: linear-gradient(90deg, var(--tiger-orange-deep) 0%, var(--tiger-black) 100%);
-  -webkit-background-clip: text;
-          background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
-.christal-sub {
+.brand-app {
   font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.22em;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--tiger-orange-deep);
 }
 @media (max-width: 640px) {
-  .christal-mark { font-size: 28px; }
-  .christal-sub  { font-size: 11px; letter-spacing: 0.18em; }
+  .brand-paw { width: 38px; height: 38px; }
+  .brand-school { font-size: 20px; }
+  .brand-app { font-size: 10px; letter-spacing: 0.16em; }
 }
 
 /* Subtle tiger-stripe top border on the header */
@@ -62,6 +67,52 @@
   color: var(--tiger-orange-deep);
   border-color: var(--tiger-gold);
   background: #fff6e8;
+}
+
+/* Tigers hero */
+.hero-tigers {
+  background:
+    linear-gradient(180deg, #fff2dc 0%, var(--bg) 100%);
+  position: relative;
+  overflow: hidden;
+}
+.hero-tigers .hero-title {
+  font-size: clamp(48px, 8vw, 88px);
+  margin: 14px 0 4px;
+  letter-spacing: -0.015em;
+  line-height: 1;
+}
+.hero-tigers .hero-go {
+  color: var(--tiger-black);
+}
+.hero-word-tigers {
+  background: linear-gradient(90deg, var(--tiger-orange) 0%, var(--tiger-orange-deep) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-style: italic;
+}
+.hero-sub {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(16px, 2vw, 20px);
+  color: var(--tiger-black);
+  margin: 0 0 14px;
+  letter-spacing: 0.02em;
+}
+.hero-paw-watermark {
+  position: absolute;
+  right: -30px;
+  top: 30px;
+  width: 320px;
+  height: 320px;
+  fill: var(--tiger-orange);
+  opacity: 0.08;
+  pointer-events: none;
+  transform: rotate(-15deg);
+}
+@media (max-width: 640px) {
+  .hero-paw-watermark { width: 220px; height: 220px; right: -50px; top: 20px; }
 }
 
 /* Primary button tinted tiger */

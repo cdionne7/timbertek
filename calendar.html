@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yearly Planner — Timber Tek LLC</title>
+  <meta name="description" content="Interactive yearly planner with two-way Google Calendar sync." />
+  <meta name="theme-color" content="#2b2018" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="calendar.css" />
+</head>
+<body>
+  <a class="skip-link" href="#planner">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="https://www.timbertekllc.com" target="_blank" rel="noopener" aria-label="Timber Tek LLC">
+        <img class="brand-logo" src="assets/timbertek-logo.png" alt="Timber Tek LLC — Above And Beyond Service And Quality" width="323" height="130" />
+      </a>
+
+      <nav class="header-actions" aria-label="Primary navigation">
+        <a class="btn btn-ghost" href="index.html">Project Plan</a>
+        <button class="btn btn-ghost" type="button" id="configBtn" title="Set Google OAuth Client ID">Setup</button>
+        <button class="btn btn-primary" type="button" id="connectBtn">Connect Google Calendar</button>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero hero-compact">
+    <div class="container hero-inner">
+      <div class="hero-eyebrow">Yearly Planner</div>
+      <h1 class="hero-title">Year at a Glance</h1>
+      <p class="hero-lede">
+        An interactive yearly planner that syncs with your Google Calendar. Type in any day cell to add
+        an event; clear the cell to remove it. Changes write straight to the calendar you pick, and
+        loading the page pulls the latest events back down.
+      </p>
+    </div>
+  </section>
+
+  <main class="container main-content">
+
+    <section id="planner" class="section">
+      <div class="planner-toolbar" role="toolbar" aria-label="Planner controls">
+        <div class="toolbar-group">
+          <label class="toolbar-label" for="yearSelect">Year</label>
+          <select id="yearSelect" class="toolbar-select" aria-label="Year"></select>
+        </div>
+
+        <div class="toolbar-group">
+          <label class="toolbar-label" for="calendarSelect">Calendar</label>
+          <select id="calendarSelect" class="toolbar-select" aria-label="Google Calendar" disabled>
+            <option value="">Connect first…</option>
+          </select>
+        </div>
+
+        <div class="toolbar-group toolbar-status">
+          <span id="statusDot" class="status-dot status-offline" aria-hidden="true"></span>
+          <span id="statusText" class="status-text">Not connected</span>
+        </div>
+
+        <div class="toolbar-group toolbar-actions-right">
+          <button class="link-btn" type="button" id="refreshBtn" disabled>Refresh events</button>
+          <span class="toolbar-sep" aria-hidden="true">&middot;</span>
+          <button class="link-btn" type="button" id="signOutBtn" disabled>Sign out</button>
+        </div>
+      </div>
+
+      <div class="planner-note" id="plannerNote">
+        <strong>First time?</strong> Click <em>Setup</em> to paste your Google OAuth Client ID
+        (one-time, stored locally in this browser). Then <em>Connect Google Calendar</em> to sign in.
+        See the setup guide linked at the bottom of the page.
+      </div>
+
+      <div class="year-grid" id="yearGrid" aria-live="polite"></div>
+    </section>
+
+    <section class="section" id="setupHelp">
+      <header class="section-head">
+        <h2 class="section-title">Google Calendar Setup</h2>
+        <p class="section-kicker">One-time steps to enable the connection</p>
+      </header>
+      <ol class="setup-list">
+        <li>Go to <a href="https://console.cloud.google.com/" target="_blank" rel="noopener">Google Cloud Console</a> and create (or pick) a project.</li>
+        <li>Enable <strong>Google Calendar API</strong> under APIs &amp; Services &rarr; Library.</li>
+        <li>Under <strong>Credentials</strong>, create an <strong>OAuth 2.0 Client ID</strong> of type <em>Web application</em>.</li>
+        <li>Add the page's origin to <strong>Authorized JavaScript origins</strong> — for example
+          <code>http://localhost:8080</code> for local preview and your deployed origin
+          (e.g. <code>https://projects.timbertekllc.com</code> or
+          <code>https://cdionne7.github.io</code>).</li>
+        <li>Copy the resulting <strong>Client ID</strong>, click <em>Setup</em> at the top of this page, and paste it in.</li>
+        <li>Click <em>Connect Google Calendar</em>, grant access, pick a calendar, and you're synced.</li>
+      </ol>
+      <p class="setup-fine">
+        Credentials never leave your browser. The Client ID is saved in <code>localStorage</code> on
+        this device only. Access tokens are held in memory for the session and discarded on sign out.
+      </p>
+    </section>
+  </main>
+
+  <!-- Config modal -->
+  <div class="modal" id="configModal" role="dialog" aria-modal="true" aria-labelledby="configTitle" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel">
+      <h2 class="modal-title" id="configTitle">Google OAuth Client ID</h2>
+      <p class="modal-desc">
+        Paste the Client ID from your Google Cloud project. It looks like
+        <code>1234567890-abc...apps.googleusercontent.com</code>.
+      </p>
+      <label class="modal-field">
+        <span>Client ID</span>
+        <input type="text" id="clientIdInput" placeholder="xxxxxx.apps.googleusercontent.com" autocomplete="off" spellcheck="false" />
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="button" class="btn btn-primary" id="saveConfigBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img class="footer-logo" src="assets/timbertek-logo.png" alt="Timber Tek LLC" />
+        <div class="footer-tag">General contracting &middot; Timber framing &middot; Remodels</div>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Project Plan</a>
+        <a href="https://www.timbertekllc.com" target="_blank" rel="noopener">www.timbertekllc.com</a>
+        <a href="mailto:build@timbertekllc.com">build@timbertekllc.com</a>
+      </div>
+      <div class="footer-fine">
+        <div>&copy; <span id="year"></span> Timber Tek LLC. All rights reserved.</div>
+        <div class="footer-note">Hosted on GitHub Pages &middot; Google Calendar sync runs entirely in your browser</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="calendar.js" defer></script>
+</body>
+</html>

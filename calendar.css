@@ -1,5 +1,17 @@
 /* Yearly planner — additive styles on top of styles.css */
 
+/* Tigers theme palette (Littleton, MA) — orange + black */
+.hero, .site-header, .site-footer, .main-content {
+  /* scope palette overrides to the calendar page; styles.css vars already cascade */
+}
+:root {
+  --tiger-orange: #f28a1c;
+  --tiger-orange-deep: #d96c10;
+  --tiger-black: #1a1a1a;
+  --tiger-black-soft: #2b2b2b;
+  --tiger-gold: #f6c560;
+}
+
 /* Christal. Calendar wordmark */
 .brand-christal {
   display: inline-flex;
@@ -14,26 +26,98 @@
   font-weight: 700;
   font-size: 34px;
   letter-spacing: -0.02em;
-  color: var(--ink);
-  background: linear-gradient(90deg, var(--ttek-orange-dark) 0%, var(--wood-dark) 100%);
+  color: var(--tiger-black);
+  background: linear-gradient(90deg, var(--tiger-orange-deep) 0%, var(--tiger-black) 100%);
   -webkit-background-clip: text;
           background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .christal-sub {
   font-family: var(--font-sans);
-  font-weight: 600;
+  font-weight: 700;
   font-size: 12px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--ink-mute);
+  color: var(--tiger-orange-deep);
 }
 @media (max-width: 640px) {
   .christal-mark { font-size: 28px; }
   .christal-sub  { font-size: 11px; letter-spacing: 0.18em; }
 }
 
+/* Subtle tiger-stripe top border on the header */
+.site-header {
+  border-top: 4px solid var(--tiger-orange);
+  background:
+    repeating-linear-gradient(90deg,
+      var(--tiger-orange) 0 24px,
+      var(--tiger-black) 24px 28px,
+      var(--tiger-orange) 28px 52px,
+      var(--tiger-black) 52px 56px) top / 100% 4px no-repeat,
+    var(--bg-elev);
+}
+
 .hero-compact { padding: 40px 0 28px; }
+.hero-eyebrow {
+  color: var(--tiger-orange-deep);
+  border-color: var(--tiger-gold);
+  background: #fff6e8;
+}
+
+/* Primary button tinted tiger */
+.btn-primary {
+  background: var(--tiger-black);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--tiger-orange-deep); }
+
+/* Tigers footer block */
+.site-footer-tigers {
+  background: linear-gradient(180deg, var(--tiger-black) 0%, var(--tiger-black-soft) 100%);
+  color: #e8d6bd;
+  position: relative;
+}
+.site-footer-tigers::before {
+  content: "";
+  display: block;
+  height: 4px;
+  background: repeating-linear-gradient(90deg,
+    var(--tiger-orange) 0 24px,
+    var(--tiger-black) 24px 28px,
+    var(--tiger-orange) 28px 52px,
+    var(--tiger-black) 52px 56px);
+}
+.tigers-mark {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.tigers-paw {
+  width: 42px; height: 42px;
+  fill: var(--tiger-orange);
+  flex: 0 0 auto;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,0.35));
+}
+.tigers-text { display: flex; flex-direction: column; line-height: 1.1; }
+.tigers-name {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+  color: #fff;
+  text-transform: uppercase;
+}
+.tigers-sub {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tiger-orange);
+  margin-top: 3px;
+}
+.site-footer-tigers .footer-fine {
+  border-top-color: rgba(242, 138, 28, 0.25);
+  color: #b39a7c;
+}
 
 /* Toolbar */
 .planner-toolbar {

@@ -31,12 +31,12 @@
 
   <section class="hero hero-compact">
     <div class="container hero-inner">
-      <div class="hero-eyebrow">Christal's Planner</div>
+      <div class="hero-eyebrow">Go Tigers — Littleton, MA</div>
       <h1 class="hero-title">Year at a Glance</h1>
       <p class="hero-lede">
-        An interactive yearly planner that syncs with Google Calendar. Tap any day to add an event;
-        clear the cell to remove it. Changes write straight to the calendar you pick, and loading the
-        page pulls the latest events back down.
+        Christal's interactive yearly planner that syncs with Google Calendar. Tap any day to add an
+        event; clear the cell to remove it. Changes write straight to the calendar you pick, and
+        loading the page pulls the latest events back down.
       </p>
     </div>
   </section>
@@ -48,6 +48,11 @@
         <div class="toolbar-group">
           <label class="toolbar-label" for="yearSelect">Year</label>
           <select id="yearSelect" class="toolbar-select" aria-label="Year"></select>
+        </div>
+
+        <div class="toolbar-group">
+          <label class="toolbar-label" for="startMonthSelect">Start month</label>
+          <select id="startMonthSelect" class="toolbar-select" aria-label="Start month"></select>
         </div>
 
         <div class="toolbar-group">
@@ -121,20 +126,26 @@
     </div>
   </div>
 
-  <footer class="site-footer">
+  <footer class="site-footer site-footer-tigers">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <img class="footer-logo" src="assets/timbertek-logo.png" alt="Timber Tek LLC" />
-        <div class="footer-tag">General contracting &middot; Timber framing &middot; Remodels</div>
-      </div>
-      <div class="footer-links">
-        <a href="index.html">Project Plan</a>
-        <a href="https://www.timbertekllc.com" target="_blank" rel="noopener">www.timbertekllc.com</a>
-        <a href="mailto:build@timbertekllc.com">build@timbertekllc.com</a>
+        <div class="tigers-mark" aria-label="Littleton Tigers">
+          <svg class="tigers-paw" viewBox="0 0 64 64" aria-hidden="true">
+            <ellipse cx="32" cy="44" rx="16" ry="14"/>
+            <ellipse cx="16" cy="24" rx="5" ry="7"/>
+            <ellipse cx="26" cy="14" rx="5" ry="7"/>
+            <ellipse cx="38" cy="14" rx="5" ry="7"/>
+            <ellipse cx="48" cy="24" rx="5" ry="7"/>
+          </svg>
+          <div class="tigers-text">
+            <span class="tigers-name">Littleton Tigers</span>
+            <span class="tigers-sub">Littleton, Massachusetts</span>
+          </div>
+        </div>
       </div>
       <div class="footer-fine">
-        <div>&copy; <span id="year"></span> Timber Tek LLC. All rights reserved.</div>
-        <div class="footer-note">Hosted on GitHub Pages &middot; Google Calendar sync runs entirely in your browser</div>
+        <div>&copy; <span id="year"></span> christal. calendar &middot; Go Tigers</div>
+        <div class="footer-note">Runs entirely in your browser &middot; Google Calendar sync is client-side</div>
       </div>
     </div>
   </footer>

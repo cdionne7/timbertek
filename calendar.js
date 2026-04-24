@@ -16,6 +16,7 @@
   const LS_CLIENT_ID = "ttek.calendar.clientId";
   const LS_CAL_ID = "ttek.calendar.calendarId";
   const LS_YEAR = "ttek.calendar.year";
+  const LS_START_MONTH = "ttek.calendar.startMonth";
   const LS_DEMO_PREFIX = "ttek.calendar.demo.";
 
   // Sample entries mirroring the spreadsheet screenshot so the page has
@@ -97,6 +98,7 @@
 
   const state = {
     year: new Date().getFullYear(),
+    startMonth: Number(localStorage.getItem(LS_START_MONTH) || 0), // 0 = January
     clientId: localStorage.getItem(LS_CLIENT_ID) || "",
     calendarId: localStorage.getItem(LS_CAL_ID) || "",
     accessToken: null,
@@ -112,6 +114,7 @@
   const el = {
     yearGrid: document.getElementById("yearGrid"),
     yearSelect: document.getElementById("yearSelect"),
+    startMonthSelect: document.getElementById("startMonthSelect"),
     calendarSelect: document.getElementById("calendarSelect"),
     connectBtn: document.getElementById("connectBtn"),
     configBtn: document.getElementById("configBtn"),
@@ -169,20 +172,27 @@
   function saveDemoOverrides(year, map) {
     localStorage.setItem(demoKey(year), JSON.stringify(map));
   }
-  function buildDemoEventsForYear(year) {
-    const overrides = loadDemoOverrides(year);
+  function buildDemoEventsForRange(startYear, startMonth) {
     const map = new Map();
-    // Seed defaults first
-    for (const [mIdx, days] of Object.entries(DEMO_EVENTS)) {
+    const yearsTouched = new Set();
+    for (let i = 0; i < 12; i++) {
+      const absMonth = startMonth + i;
+      const y = startYear + Math.floor(absMonth / 12);
+      const m = absMonth % 12;
+      yearsTouched.add(y);
+      const days = DEMO_EVENTS[m] || {};
       for (const [d, summary] of Object.entries(days)) {
-        const iso = isoDate(year, Number(mIdx), Number(d));
+        const iso = isoDate(y, m, Number(d));
         map.set(iso, [{ id: "demo:" + iso, summary, __demo: true }]);
       }
     }
-    // Overrides wipe/replace defaults for that date
-    for (const [iso, summary] of Object.entries(overrides)) {
-      if (summary) map.set(iso, [{ id: "demo:" + iso, summary, __demo: true }]);
-      else map.delete(iso);
+    // Apply overrides from every year touched by the current window
+    for (const y of yearsTouched) {
+      const overrides = loadDemoOverrides(y);
+      for (const [iso, summary] of Object.entries(overrides)) {
+        if (summary) map.set(iso, [{ id: "demo:" + iso, summary, __demo: true }]);
+        else map.delete(iso);
+      }
     }
     return map;
   }
@@ -196,23 +206,28 @@
       return isoDate(t.getFullYear(), t.getMonth(), t.getDate());
     })();
 
-    for (let m = 0; m < 12; m++) {
+    // Walk 12 months starting from state.startMonth in state.year, rolling into
+    // the following year when startMonth != January.
+    for (let i = 0; i < 12; i++) {
+      const absMonth = state.startMonth + i;
+      const y = year + Math.floor(absMonth / 12);
+      const m = absMonth % 12;
       const card = document.createElement("article");
       card.className = "month-card";
 
       const head = document.createElement("header");
       head.className = "month-head";
-      head.innerHTML = `<h3 class="month-name">${MONTHS[m]}</h3><span class="month-year">${year}</span>`;
+      head.innerHTML = `<h3 class="month-name">${MONTHS[m]}</h3><span class="month-year">${y}</span>`;
       card.appendChild(head);
 
       const list = document.createElement("ol");
       list.className = "day-list";
 
-      const totalDays = daysInMonth(year, m);
+      const totalDays = daysInMonth(y, m);
       for (let d = 1; d <= totalDays; d++) {
-        const dt = new Date(year, m, d);
+        const dt = new Date(y, m, d);
         const dow = dt.getDay();
-        const iso = isoDate(year, m, d);
+        const iso = isoDate(y, m, d);
         const row = document.createElement("li");
         row.className = "day-row";
         row.dataset.date = iso;
@@ -222,7 +237,7 @@
         row.innerHTML = `
           <span class="day-num">${d}</span>
           <span class="day-dow">${DOW[dow]}</span>
-          <input type="text" class="day-input" aria-label="Event on ${MONTHS[m]} ${d}, ${year}" placeholder="" disabled />
+          <input type="text" class="day-input" aria-label="Event on ${MONTHS[m]} ${d}, ${y}" placeholder="" disabled />
         `;
         const input = row.querySelector(".day-input");
         input.addEventListener("input", onCellInput);
@@ -244,7 +259,7 @@
 
     // If not signed in, populate with demo data so the page is immediately usable.
     if (!state.accessToken) {
-      state.eventsByDate = buildDemoEventsForYear(year);
+      state.eventsByDate = buildDemoEventsForRange(year, state.startMonth);
     }
     applyEventsToGrid();
     if (!state.accessToken) setConnectedUI(false);
@@ -314,10 +329,13 @@
 
     // Demo mode: persist to localStorage only. Blank = remove.
     if (!state.accessToken || !state.calendarId) {
-      const overrides = loadDemoOverrides(state.year);
+      // Key overrides by the calendar year of the edited cell (may differ from
+      // state.year when the start month causes the window to span two years).
+      const cellYear = Number(iso.slice(0, 4));
+      const overrides = loadDemoOverrides(cellYear);
       if (newText) overrides[iso] = newText;
       else overrides[iso] = ""; // sentinel so default demo entry is suppressed
-      saveDemoOverrides(state.year, overrides);
+      saveDemoOverrides(cellYear, overrides);
       const list = state.eventsByDate.get(iso) || [];
       if (newText) {
         state.eventsByDate.set(iso, [{ id: "demo:" + iso, summary: newText, __demo: true }]);
@@ -426,7 +444,7 @@
     }
     state.accessToken = null;
     state.tokenExpiresAt = 0;
-    state.eventsByDate = buildDemoEventsForYear(state.year);
+    state.eventsByDate = buildDemoEventsForRange(state.year, state.startMonth);
     applyEventsToGrid();
     setConnectedUI(false);
     setStatus("offline", "Demo mode");
@@ -498,9 +516,17 @@
 
   async function loadYearEvents(year) {
     if (!state.calendarId) return;
-    setStatus("busy", `Loading ${year} events…`);
-    const timeMin = new Date(Date.UTC(year, 0, 1)).toISOString();
-    const timeMax = new Date(Date.UTC(year + 1, 0, 1)).toISOString();
+    // Window covers 12 months starting from state.startMonth, possibly rolling into year+1
+    const startMonth = state.startMonth;
+    const endAbsMonth = startMonth + 12;
+    const endYear = year + Math.floor(endAbsMonth / 12);
+    const endMonthIdx = endAbsMonth % 12;
+    setStatus("busy", `Loading events…`);
+    const timeMin = new Date(Date.UTC(year, startMonth, 1)).toISOString();
+    const timeMax = new Date(Date.UTC(endYear, endMonthIdx, 1)).toISOString();
+    // ISO strings that bound the visible window for client-side filtering
+    const winStart = `${year}-${pad2(startMonth + 1)}-01`;
+    const winEndExclusive = `${endYear}-${pad2(endMonthIdx + 1)}-01`;
     const map = new Map();
     let pageToken = "";
     do {
@@ -515,8 +541,7 @@
       for (const ev of data.items || []) {
         const iso = eventStartDateISO(ev);
         if (!iso) continue;
-        // Only keep events that fall inside this year
-        if (iso < `${year}-01-01` || iso > `${year}-12-31`) continue;
+        if (iso < winStart || iso >= winEndExclusive) continue;
         const list = map.get(iso) || [];
         list.push(ev);
         map.set(iso, list);
@@ -597,6 +622,16 @@
     state.year = Number(el.yearSelect.value) || thisYear;
   }
 
+  function populateStartMonthSelect() {
+    MONTHS.forEach((name, idx) => {
+      const opt = document.createElement("option");
+      opt.value = String(idx);
+      opt.textContent = name;
+      if (idx === state.startMonth) opt.selected = true;
+      el.startMonthSelect.appendChild(opt);
+    });
+  }
+
   function bindEvents() {
     el.yearSelect.addEventListener("change", () => {
       const y = Number(el.yearSelect.value);
@@ -604,6 +639,17 @@
       renderYear(y);
       if (state.accessToken && state.calendarId) {
         loadYearEvents(y).catch((err) => {
+          setStatus("error", err.message || "Failed to load events");
+        });
+      }
+    });
+
+    el.startMonthSelect.addEventListener("change", () => {
+      state.startMonth = Number(el.startMonthSelect.value) || 0;
+      localStorage.setItem(LS_START_MONTH, String(state.startMonth));
+      renderYear(state.year);
+      if (state.accessToken && state.calendarId) {
+        loadYearEvents(state.year).catch((err) => {
           setStatus("error", err.message || "Failed to load events");
         });
       }
@@ -639,6 +685,7 @@
   function init() {
     if (el.footerYear) el.footerYear.textContent = new Date().getFullYear();
     populateYearSelect();
+    populateStartMonthSelect();
     bindEvents();
     renderYear(state.year);
     setStatus("offline", "Demo mode");

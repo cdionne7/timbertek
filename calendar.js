@@ -16,6 +16,33 @@
   const LS_CLIENT_ID = "ttek.calendar.clientId";
   const LS_CAL_ID = "ttek.calendar.calendarId";
   const LS_YEAR = "ttek.calendar.year";
+  const LS_DEMO_PREFIX = "ttek.calendar.demo.";
+
+  // Sample entries mirroring the spreadsheet screenshot so the page has
+  // something to show before Google sign-in. Keyed as { monthIdx: { day: text } }.
+  const DEMO_EVENTS = {
+    0: { // January
+      1: "Family lunch", 3: "Team meeting", 4: "Birthday — text here",
+      6: "Kids return to school", 7: "Payday", 8: "Sarah's b-day — cake",
+      10: "Pay rent", 11: "Birthday party", 12: "Call grandma",
+      15: "Jake's birthday", 18: "Grocery shopping", 20: "Internal training",
+    },
+    1: { // February
+      5: "Vacation", 9: "Family picnic", 11: "Doctor check-up",
+      13: "Bill payment", 17: "Grocery shopping", 22: "Weekend getaway",
+    },
+    2: { // March
+      4: "Team meeting", 6: "Anniversary", 7: "Payday",
+      11: "Dad's birthday", 13: "Public holiday", 17: "St. Patrick's Day",
+    },
+    3: { 15: "Taxes due", 22: "Earth Day" },
+    4: { 10: "Mother's Day" },
+    5: { 21: "Father's Day" },
+    6: { 4: "Independence Day" },
+    9: { 31: "Halloween" },
+    10: { 26: "Thanksgiving" },
+    11: { 24: "Christmas Eve", 25: "Christmas", 31: "New Year's Eve" },
+  };
 
   const MONTHS = [
     "January", "February", "March", "April", "May", "June",
@@ -74,13 +101,45 @@
     el.calendarSelect.disabled = !connected;
     el.refreshBtn.disabled = !connected;
     el.signOutBtn.disabled = !connected;
+    // Inputs stay enabled in demo mode so the page is usable without sign-in.
     const inputs = el.yearGrid.querySelectorAll(".day-input");
-    inputs.forEach((i) => { i.disabled = !connected; });
+    inputs.forEach((i) => { i.disabled = false; });
     if (connected) {
-      el.note.classList.add("is-hidden");
+      el.note.innerHTML = `<strong>Connected.</strong> Edits write straight to your
+        Google Calendar. Switch calendar or year from the toolbar above.`;
     } else {
-      el.note.classList.remove("is-hidden");
+      el.note.innerHTML = `<strong>Demo mode.</strong> Tap a day to edit — changes
+        are saved only in this browser. To make it real, click
+        <em>Connect Google Calendar</em> and edits will sync two-way.`;
     }
+    el.note.classList.remove("is-hidden");
+  }
+
+  // --- Demo storage -------------------------------------------------------
+  function demoKey(year) { return LS_DEMO_PREFIX + year; }
+  function loadDemoOverrides(year) {
+    try { return JSON.parse(localStorage.getItem(demoKey(year)) || "{}"); }
+    catch { return {}; }
+  }
+  function saveDemoOverrides(year, map) {
+    localStorage.setItem(demoKey(year), JSON.stringify(map));
+  }
+  function buildDemoEventsForYear(year) {
+    const overrides = loadDemoOverrides(year);
+    const map = new Map();
+    // Seed defaults first
+    for (const [mIdx, days] of Object.entries(DEMO_EVENTS)) {
+      for (const [d, summary] of Object.entries(days)) {
+        const iso = isoDate(year, Number(mIdx), Number(d));
+        map.set(iso, [{ id: "demo:" + iso, summary, __demo: true }]);
+      }
+    }
+    // Overrides wipe/replace defaults for that date
+    for (const [iso, summary] of Object.entries(overrides)) {
+      if (summary) map.set(iso, [{ id: "demo:" + iso, summary, __demo: true }]);
+      else map.delete(iso);
+    }
+    return map;
   }
 
   // --- Year grid rendering ------------------------------------------------
@@ -138,6 +197,10 @@
       el.yearGrid.appendChild(card);
     }
 
+    // If not signed in, populate with demo data so the page is immediately usable.
+    if (!state.accessToken) {
+      state.eventsByDate = buildDemoEventsForYear(year);
+    }
     applyEventsToGrid();
     if (!state.accessToken) setConnectedUI(false);
   }
@@ -198,12 +261,28 @@
   }
 
   async function saveCell(row, input) {
-    if (!state.accessToken || !state.calendarId) return;
     const iso = row.dataset.date;
     const newText = input.value.trim();
     const original = (input.dataset.original || "").trim();
     const eventId = input.dataset.eventId || "";
     if (newText === original) return;
+
+    // Demo mode: persist to localStorage only. Blank = remove.
+    if (!state.accessToken || !state.calendarId) {
+      const overrides = loadDemoOverrides(state.year);
+      if (newText) overrides[iso] = newText;
+      else overrides[iso] = ""; // sentinel so default demo entry is suppressed
+      saveDemoOverrides(state.year, overrides);
+      const list = state.eventsByDate.get(iso) || [];
+      if (newText) {
+        state.eventsByDate.set(iso, [{ id: "demo:" + iso, summary: newText, __demo: true }]);
+      } else {
+        state.eventsByDate.delete(iso);
+      }
+      input.dataset.original = newText;
+      input.dataset.eventId = newText ? "demo:" + iso : "";
+      return;
+    }
 
     row.classList.remove("is-error");
     row.classList.add("is-saving");
@@ -302,10 +381,10 @@
     }
     state.accessToken = null;
     state.tokenExpiresAt = 0;
-    state.eventsByDate.clear();
+    state.eventsByDate = buildDemoEventsForYear(state.year);
     applyEventsToGrid();
     setConnectedUI(false);
-    setStatus("offline", "Signed out");
+    setStatus("offline", "Demo mode");
   }
 
   // --- Calendar API calls -------------------------------------------------
@@ -517,7 +596,7 @@
     populateYearSelect();
     bindEvents();
     renderYear(state.year);
-    setStatus("offline", state.clientId ? "Not connected" : "Setup required");
+    setStatus("offline", "Demo mode");
   }
 
   if (document.readyState === "loading") {

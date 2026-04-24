@@ -22,26 +22,71 @@
   // something to show before Google sign-in. Keyed as { monthIdx: { day: text } }.
   const DEMO_EVENTS = {
     0: { // January
-      1: "Family lunch", 3: "Team meeting", 4: "Birthday — text here",
-      6: "Kids return to school", 7: "Payday", 8: "Sarah's b-day — cake",
+      1: "New Year's Day", 3: "Team meeting", 4: "Sarah's birthday",
+      6: "Kids return to school", 7: "Payday", 8: "Dentist — 10am",
       10: "Pay rent", 11: "Birthday party", 12: "Call grandma",
       15: "Jake's birthday", 18: "Grocery shopping", 20: "Internal training",
+      24: "Date night", 27: "Trash day", 31: "Monthly budget review",
     },
     1: { // February
-      5: "Vacation", 9: "Family picnic", 11: "Doctor check-up",
-      13: "Bill payment", 17: "Grocery shopping", 22: "Weekend getaway",
+      2: "Groundhog Day", 5: "Vacation — Vermont", 9: "Family picnic",
+      11: "Doctor check-up", 13: "Bill payment", 14: "Valentine's Day",
+      17: "Grocery shopping", 20: "Book club", 22: "Weekend getaway",
+      24: "Pay rent", 27: "Car inspection",
     },
     2: { // March
-      4: "Team meeting", 6: "Anniversary", 7: "Payday",
-      11: "Dad's birthday", 13: "Public holiday", 17: "St. Patrick's Day",
+      4: "Team meeting", 7: "Payday", 10: "Spring cleaning weekend",
+      11: "Dad's birthday", 14: "Pi Day — bake!", 17: "St. Patrick's Day",
+      20: "First day of spring", 22: "Dentist — Jake", 28: "Easter prep",
+      31: "Monthly budget review",
     },
-    3: { 15: "Taxes due", 22: "Earth Day" },
-    4: { 10: "Mother's Day" },
-    5: { 21: "Father's Day" },
-    6: { 4: "Independence Day" },
-    9: { 31: "Halloween" },
-    10: { 26: "Thanksgiving" },
-    11: { 24: "Christmas Eve", 25: "Christmas", 31: "New Year's Eve" },
+    3: { // April
+      1: "April Fool's", 7: "Payday", 10: "School play",
+      15: "Taxes due", 18: "Mom visits", 22: "Earth Day",
+      25: "Soccer starts", 28: "Pay rent",
+    },
+    4: { // May
+      1: "May Day — garden day", 5: "Cinco de Mayo", 7: "Payday",
+      10: "Mother's Day", 14: "Anniversary dinner", 17: "Yard work day",
+      22: "Sarah — school recital", 25: "Memorial Day weekend",
+      30: "Pay rent",
+    },
+    5: { // June
+      1: "Last day of school", 7: "Payday", 14: "Flag Day",
+      15: "Father's Day brunch", 19: "Juneteenth", 21: "Summer solstice",
+      24: "Camp starts — Jake", 28: "Pay rent",
+    },
+    6: { // July
+      4: "Independence Day", 7: "Payday", 10: "Beach trip — Cape Cod",
+      15: "Back from vacation", 20: "Family BBQ", 25: "Grocery shopping",
+      28: "Pay rent", 31: "Monthly budget review",
+    },
+    7: { // August
+      5: "Payday", 9: "Pool day", 12: "Back-to-school shopping",
+      18: "Dentist — Sarah", 23: "Last summer weekend", 26: "School supplies",
+      28: "Pay rent", 31: "First day of school",
+    },
+    8: { // September
+      1: "Labor Day weekend", 5: "Payday", 9: "Parent-teacher night",
+      12: "Oil change", 15: "Soccer game", 20: "Apple picking",
+      22: "First day of fall", 28: "Pay rent",
+    },
+    9: { // October
+      7: "Payday", 10: "Pumpkin patch", 12: "Family movie night",
+      15: "Flu shots", 19: "Jake — sleepover", 25: "Rake the yard",
+      28: "Pay rent", 31: "Halloween — trick or treat",
+    },
+    10: { // November
+      3: "Daylight saving ends", 7: "Payday", 11: "Veterans Day",
+      16: "Friendsgiving", 22: "Grocery run — holiday", 26: "Turkey prep",
+      27: "Thanksgiving", 28: "Black Friday", 30: "Pay rent",
+    },
+    11: { // December
+      1: "Put up tree", 6: "Holiday shopping", 7: "Payday",
+      12: "Cookie baking", 15: "School break begins", 20: "Ski trip — Stowe",
+      24: "Christmas Eve", 25: "Christmas", 28: "Pay rent",
+      31: "New Year's Eve party",
+    },
   };
 
   const MONTHS = [
